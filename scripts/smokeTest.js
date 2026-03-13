@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { group, check } from 'k6';
 import { login } from '../utils/auth.js';
 
-const baseUrl = 'http://localhost:3000';
+
 
 export const options = {
     vus: 1,
@@ -14,13 +14,12 @@ export const options = {
 
 
 export function setup(){
-    
-
 
     const authToken = login();
 
+    const baseUrl = 'http://localhost:3000';
+
     return {baseUrl, authToken};
-    
 
 }
 
@@ -32,7 +31,7 @@ export default function(data){
     };
 
     group('01 - Listagem de usuários', () =>{
-        const resUser = http.get(`${baseUrl}/usuarios`, {headers: protectedHeaders});
+        const resUser = http.get(`${data.baseUrl}/usuarios`, {headers: protectedHeaders});
 
         check(resUser, {
             'Status code == 200': (r) => r.status === 200,
@@ -41,7 +40,7 @@ export default function(data){
     });
 
     group('02 - Listagem de produtos', () =>{
-        const resProd = http.get(`${baseUrl}/produtos`, {headers: protectedHeaders});
+        const resProd = http.get(`${data.baseUrl}/produtos`, {headers: protectedHeaders});
 
         check(resProd, {
             'Status code == 200': (r) => r.status === 200,
@@ -50,7 +49,7 @@ export default function(data){
     });
 
     group('03 - Consulta de carrinho', () =>{
-       const resCar =  http.get(`${baseUrl}/carrinhos/qbMqntef4iTOwWfg`, {headers: protectedHeaders});
+       const resCar =  http.get(`${data.baseUrl}/carrinhos/qbMqntef4iTOwWfg`, {headers: protectedHeaders});
 
         check(resCar, {
             'Status code == 200': (r) => r.status === 200,
